@@ -9,51 +9,108 @@ inlog.title('Inloggen')
 #Functie voor het aanmaken van de derde pagina waarbij de NAW gegevens kunnen worden opgezocht en de arts en ziekte kunnen worden gekozen.
 
 def homepage():
-    #List met alle ziektes die kunnen worden gekozen.
-    ziektes =[]
-    #Listg met alle artsen die kunnen worden gekozen.
-    artsen=[]
-
+    
     homepage = Toplevel(inlog)
     homepage.title('Homepage')
 
-    #Het inlezen van beide Listboxen voor de ziektes en de artsen.
-    i=0
-
-    lbo_ziektes =Listbox(homepage, exportselection=0)
-    for ziekte in ziektes:
-        lbo_ziektes.insert(i,ziekte)
-        i =+ 1
-    j = 0
-    lbo_artsen = Listbox(homepage, exportselection=0)
-    for arts in artsen:
-        lbo_artsen.insert(j, arts)
-        j =+ 1
-
-    #Definieren van bepaalde variablen die nodig zijn voor de widgets
+    #Alle variabelen die global gebruikt moeten worden
+    global ziektes, artsen, lbo_artsen, lbo_ziekten, keuze, keuze2
+    
+    #Variablenen definieeren
     msg=""
     Tekst = Label(homepage, text= msg)
     voor_naam = StringVar()
     a_dres = StringVar()
     woon_plaats = StringVar()
-    global keuze 
-    global keuze2
     keuze2 = IntVar(value=1)
     keuze = IntVar(value=1)
     getypt = StringVar()
     achternamen = ""
 
+    #List met alle ziektes die kunnen worden gekozen.
+    ziektes =[]
+    #List met alle artsen die kunnen worden gekozen.
+    artsen=[]
+
+    lbo_ziektes = Listbox(homepage, exportselection=0)
+    lbo_artsen = Listbox(homepage, exportselection=0)
+
+    #Functie voor het vullen van de Listbox voor de ziektebeelden
+    def zet_ziekte():
+        i=0
+        for ziekte in ziektes:
+            if keuze.get() == 1:
+                ziekte =' '.join(ziekte)
+            lbo_ziektes.insert(i, ziekte)
+            i =+ 1
+
+    #Functie voor het vullen van de Listbox voor de artsen
+    def zet_artsen():
+        j = 0
+        for arts in artsen:
+            if keuze.get() == 1:
+                arts = ' '.join(arts)
+            lbo_artsen.insert(j, arts)
+            j =+ 1
+    #Functie voor het inlezen van die artsen of de ziektebeelden van uit de textfiles.
+    def inlezen():
+        #Global variabelen zetten
+        global artsen, ziektes 
+        artsen=[]
+        ziektes=[]
+        regels=[]
+        #Wanneer de radiobutton specialist is geselecteerd worden de namen van de artsen uit het bestand zorgverleners uitgelezen en in een list gezet.
+        if keuze2.get() == 1:
+            lbo_artsen.delete(0,END)
+            with open('zorgverleners.txt') as f:
+                regels.append(f.readlines())
+                for regel in regels:
+                    for arts in regel:
+                        buffer = arts.split(',')
+                        for v in buffer:
+                            artsen.append(v)
+        zet_artsen()
+        #Wanneer de radiobutton ziektebeeld is geselecteerd worden de namen van de ziektebeelden uit het bestand zziektebeelden uitgelezen en in een list gezet.
+        if keuze2.get() == 2:
+            lbo_ziektes.delete(0,END)
+            with open('ziektebeelden.txt') as f:
+                regels.append(f.readlines())
+                for regel in regels:
+                    for ziekte in regel:
+                        buffer = ziekte.split(',')
+                        for v in buffer:
+                            ziektes.append(v)
+        zet_ziekte()
+
+
+        
+
     #De functie voor het checken of in beide listboxen een keuze is gemaakt en welke dat is.
-    def selected(event):
-        if lbo_artsen.curselection() and lbo_ziektes.curselection():
-            selected_indices_ziekte = lbo_ziektes.curselection()
-            selected_indices_artsen = lbo_artsen.curselection()
-    #Dit wordt vervolgens verwerkd in een tekst die als Label wordt getoont aan de gebruiker.
+    def selected():
+
+        selected_indices_ziekte = lbo_ziektes.curselection()
+        selected_indices_artsen = lbo_artsen.curselection()
+        selected_arts = ""
+        selected_ziekte =""
+
+        if keuze.get() == 3:
+            if keuze2.get() == 1 and lbo_ziektes.curselection():
+                selected_arts = getypt.get()
+                selected_ziekte = ",".join([lbo_ziektes.get(i) for i in selected_indices_ziekte ])
+            elif keuze2.get() == 2 and lbo_artsen.curselection():
+                selected_ziekte = getypt.get()
+                selected_arts = ",".join([lbo_artsen.get(i) for i in selected_indices_artsen])
+        elif lbo_artsen.curselection() and lbo_ziektes.curselection():
             selected_ziekte = ",".join([lbo_ziektes.get(i) for i in selected_indices_ziekte ])
             selected_arts = ",".join([lbo_artsen.get(i) for i in selected_indices_artsen])
+        if selected_ziekte == "":
+                    messagebox.showerror('Error','Geen ziektebeeld gekozen')
+        elif selected_arts =="":
+                    messagebox.showerror('Error','Geen arts gekozen')
+        else:
             msg =f'U heeft gekozen voor {selected_arts} voor een behandeling voor {selected_ziekte}.'
             Tekst['text'] = msg
-            print(msg)
+            
      #functie om uit te loggen van de Homepage en terug  te gaan naar het inlog scherm.       
     def uitloggen():
         inlog.deiconify()
@@ -87,50 +144,33 @@ def homepage():
         if keuze.get() == 1:
             database()
         elif keuze.get() == 2:
-            bestand()
-        elif keuze.get() == 3:
-            tekstveld()
+            inlezen()
 
     def database():
         global keuze2
+        global artsen
+        global ziektes
         try:
             conn = sqlite3.connect('ArtsEnZiekte.db')
-            create_arts_db = """CREATE TABLE IF NOT EXISTS artsen (
-            idarts INTEGER PRIMARY KEY AUTOINCREMENT,
-            naam VARCHAR (45) NOT NULL,
-            tussenvoegsel VARCHAR (45) NULL,
-            achternaam VARCHAR(255) NOT NULL);"""
-
-            create_ziekte_db = """CREATE TABLE IF NOT EXISTS ziekten (
-            idziekte INTEGER PRIMARY KEY AUTOINCREMENT,
-            naam VARCHAR (45) NOT NULL);"""
-
             cursor = conn.cursor()
 
-            cursor.execute(create_arts_db)
-            cursor.execute(create_ziekte_db)
-            conn.commit()
-
             if keuze2.get() == 1:
-                artsen = cursor.execute("select naam from artsen")
-                print(artsen)
+                lbo_artsen.delete(0,END)
+                cursor.execute("select arts from artsen")
+                artsen = cursor.fetchall()
+                zet_artsen()
             if keuze2.get() == 2:
-                ziektes = cursor.execute("select naam from ziekten")
-                print(ziektes)
+                lbo_ziektes.delete(0,END)
+                cursor.execute("select naam from ziekten")
+                ziektes = cursor.fetchall()
+                zet_ziekte()
         except sqlite3.Error as error:
             print(f'Er ging iets mis: \n {error}')
 
-    
-    def bestand():
-        return
-
-    def tekstveld():
-        return
-
     conn = sqlite3.connect('users.db')
     #de layout van de pagina en de widgets die er opgetoond worden.
-    lbo_artsen.bind('<<ListboxSelect>>', selected)
-    lbo_ziektes.bind('<<ListboxSelect>>',selected)
+    lbo_artsen.bind('<<ListboxSelect>>')
+    lbo_ziektes.bind('<<ListboxSelect>>')
 
     cbo_achternamen = ttk.Combobox(homepage, values=achternamen)
 
@@ -140,14 +180,14 @@ def homepage():
     cbo_achternamen.grid(column=1, row=1)
     
     Label(homepage, text='Koppel een specialist aan een ziektebeeld').grid(column=2, row=1)
-    Radiobutton(homepage, text='Database', variable=keuze, value=1).grid(column=2, row=2)
-    Radiobutton(homepage, text='Bestand', variable=keuze, value=2).grid(column=3, row=2)
-    Radiobutton(homepage, text='Tekstveld', variable=keuze, value=3).grid(column=4, row=2)
+    Radiobutton(homepage, text='Database', variable=keuze, value=1, command=koppeling).grid(column=2, row=2)
+    Radiobutton(homepage, text='Bestand', variable=keuze, value=2, command=koppeling).grid(column=3, row=2)
+    Radiobutton(homepage, text='Tekstveld', variable=keuze, value=3, command=koppeling).grid(column=4, row=2)
 
     Entry(homepage, textvariable= getypt, width= 30).grid(column=2, row=3)
 
-    Radiobutton(homepage, text='Specialist', variable= keuze2, value= 1).grid(column=3, row=3)
-    Radiobutton(homepage, text='Ziektebeeld', variable= keuze2, value= 2).grid(column=4, row=3)
+    Radiobutton(homepage, text='Specialist', variable= keuze2, value= 1,command=koppeling).grid(column=3, row=3)
+    Radiobutton(homepage, text='Ziektebeeld', variable= keuze2, value= 2, command=koppeling).grid(column=4, row=3)
 
     Label(homepage,text='Artsen').grid(column=2, row =4 )
     lbo_artsen.grid(column=2, row= 5, rowspan= 3)
@@ -167,7 +207,7 @@ def homepage():
     Tekst.grid(column=1, row=10, columnspan=3)
 
     Button(homepage, text='Zoek gegevens', width='30', command=zoek).grid(column=0, row=5)
-    Button(homepage, text='Maak koppeling', width='30', command=koppeling).grid(column= 1, row =5)
+    Button(homepage, text='Maak koppeling', width='30', command=selected).grid(column= 1, row =5)
     Button(homepage, text='Uitloggen', width='30', command=uitloggen).grid(column=0, row=6)
 
     #verstopt het inlog scherm.

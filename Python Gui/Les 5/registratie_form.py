@@ -1,11 +1,72 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import sqlite3
 
 inlog = Tk()
 inlog.title('Inloggen')
 
 #functie om het inlog scherm te sluiten
+
+def homepage():
+    homepage = Toplevel(inlog)
+    homepage.title('Homepage')
+
+    voor_naam = StringVar()
+    a_dres = StringVar()
+    woon_plaats = StringVar()
+    achternamen = ""
+
+    def uitloggen():
+        inlog.deiconify()
+        homepage.destroy()
+
+    def zoek():
+        if cbo_achternamen.get() == "":
+            messagebox.showerror('Error','Geen achternaam ingevuld')
+            return FALSE
+        else:    
+            try:
+                l_achternaam = cbo_achternamen.get()
+                voornaam = voor_naam.get()
+                adres = a_dres.get()
+                woonplaats = woon_plaats.get()
+                conn = sqlite3.connect('users.db')
+                cursor = conn.cursor()
+                cursor.execute(f"SELECT naam, adres, woonplaats FROM users CROSS JOIN naw WHERE achternaam = '{l_achternaam}'")
+                data = cursor.fetchall()
+                voor_naam.set(data[0][0])
+                a_dres.set(data[0][1])
+                woon_plaats.set(data[0][2])
+                cursor.close()
+            except sqlite3.Error as error:
+                print(f"Er ging iets mis:\n {error}")
+            finally:
+                if conn:
+                    conn.close()
+   
+    conn = sqlite3.connect('users.db')
+    
+
+    cbo_achternamen = ttk.Combobox(homepage, values=achternamen)
+
+    Label(homepage, text='Homepage', width=20, font=('bold',20)).grid(column=0, row=0)
+
+    Label(homepage, text='Achternaam', width= 20, font=('bold',10)).grid(column=0, row=1)
+    cbo_achternamen.grid(column=1, row=1)
+
+    Label(homepage, text='Voornaam:', width= 20, font=('bold',10)).grid(column=0, row=2)
+    Entry(homepage, textvariable=voor_naam, width=30).grid(column=1, row=2)
+
+    Label(homepage, text='Adres:', width= 20, font=('bold',10)).grid(column=0, row=3)
+    Entry(homepage, textvariable=a_dres, width=30).grid(column=1, row=3)
+
+    Label(homepage, text='Woonplaats:', width= 20, font=('bold',10)).grid(column=0, row=4)
+    Entry(homepage, textvariable=woon_plaats, width=30).grid(column=1, row=4)
+
+    Button(homepage, text='Zoek gegevens', width='30', command=zoek).grid(column=1, row=5)
+    Button(homepage, text='Uitloggen', width='30', command=uitloggen).grid(column=2, row=5)
+
+    inlog.withdraw()
 
 def annuleren():
     inlog.destroy()
@@ -24,7 +85,7 @@ def login():
         row = cursor.fetchall()
         if row:
             if row[0][2] == passw:
-                print("Login succesful")
+                homepage()
             else:
                 messagebox.showerror('Error','Password niet correct!')
         else:
@@ -63,6 +124,7 @@ def registreren():
             cursor.execute(f"SELECT * FROM users WHERE email = '{l_email}'")
             rows = cursor.fetchall()
             cursor.execute('INSERT INTO naw(naam, achternaam, adres, woonplaats, idnaw) VALUES(?, ?, ?, ?, ?)', (l_naam, l_achternaam, l_adres, l_woonplaats, rows[0][0]))
+            messagebox.showinfo('Geregistreerd', 'Succesvol geregistreerd')
         cursor.close()
 
     # functie om te controleren of de email adressen geldig zijn en overeenkomen voor het registeren van een nieuwe gebruiker
@@ -107,7 +169,7 @@ def registreren():
                 if conn:
                     conn.close()
                     return"SQLite connection is closed"
-
+        reg_window.destroy()
             
 
     def annuleren():
@@ -136,6 +198,7 @@ def registreren():
     achternaam = StringVar()
     adres = StringVar()
     woonplaats = StringVar()
+
 # Dit zijn  de Entry widgets en Labels die aan de gebruiker worde getoont.
     Label(reg_window, text='Email adres').grid(column=0, row=0)
     Entry(reg_window, textvariable=email1, validate='focusout', validatecommand= lambda: callback(1)).grid(column=1, row=0)
