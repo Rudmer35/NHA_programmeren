@@ -1,0 +1,94 @@
+/* header */
+header {
+    background-color: blue;
+    color: red;
+    height: 50px;
+}
+
+/* footer */
+footer {
+    background-color: red;
+    height: 50px;
+}
+
+
+/* Table cells */
+#a1 {
+    background-color: gold;
+    color: blue;
+}
+
+#a2 {
+    background-color: aqua;
+    color: goldenrod;
+}
+
+#a3 {
+    background-color: snow;
+    color: green;
+}
+
+#a4 {
+    background-color: green;
+    color: grey;
+}
+
+#b1 {
+    background-color: lime;
+    color: beige;
+}
+
+#b2 {
+    background-color: khaki;
+    color: tomato;
+}
+
+#b3 {
+    background-color: lightsalmon;
+    color: teal;
+}
+
+#b4 {
+    background-color: deeppink;
+    color: olive;
+}
+
+#c1 {
+    background-color: linen;
+    color: maroon;
+}
+
+#c2 {
+    background-color: skyblue;
+    color: slategray;
+}
+
+#c3 {
+    background-color: mediumblue;
+    color: mediumvioletred;
+}
+
+#c4 {
+    background-color: darkslateblue;
+    color: coral;
+}
+
+#d1 {
+    background-color: peru;
+    color: aquamarine;
+}
+
+#d2 {
+    background-color: hotpink;
+    color: forestgreen;
+}
+
+#d3 {
+    background-color: magenta;
+    color: firebrick;
+}
+
+#d4 {
+    background-color: darkkhaki;
+    color: midnightblue;
+}
