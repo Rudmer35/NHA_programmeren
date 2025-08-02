@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="../style/main.css">
+        <title>Contact info</title>
+    </head>
+    <body>
+        <header>
+            <ul>
+                <li class="knop"><a href="../index.html">Startpagina</a></li>
+                <li class="knop"><a href="mijncv.html">Mijn CV</a></li>
+                <li class="knop"><a href="contact.html">Contact</a></li>
+            </ul>
+        </header>
+        <form id="formulier" action="https://formspree.io/f/xovlnjkb" method="POST">
+            <table>
+                <tr>
+                    <td><label for="voornaam">Voornaam:</label></td>
+                    <td><input id="voornaam" type="text" name="voornaam"></td>
+                </tr>
+                <tr>
+                    <td><label for="achternaam">Achternaam:</label></td>
+                    <td><input id="achternaam" type="text" name="achternaam"></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input id="email" type="email" name="email"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><label for="bericht">Bericht:</label></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><textarea name="bericht" id="bericht" placeholder="Typ hier een bericht"></textarea></td>
+                </tr>
+            </table>
+            <input id="verzend_knop" type="submit" value="Verzend">
+        </form>
+        <footer>
+            <p id="copyr">
+                Copyright 2025, Rudmer Bakker
+            </p>
+        </footer>
+    </body>
+</html>
