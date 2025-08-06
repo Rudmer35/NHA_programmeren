@@ -1,0 +1,27 @@
+.copyr {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+
+ header {
+    background-color: aqua;
+ }
+
+.picture {
+    height: 200px;
+    width: 200px;
+    display: block;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+.center {
+    text-align: center;
+}
+
+
+ 
+ 
