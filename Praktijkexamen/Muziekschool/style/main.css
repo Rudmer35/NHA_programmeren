@@ -38,6 +38,18 @@ body, h1, h2, p, div{
     margin: 0px;
 }
 
+a {
+    color:white;
+    text-decoration: none;
+}
+
+footer {
+    background-color: rgb(189, 86, 13);
+    min-height: 75px;
+    align-content: center;
+    text-align: center;
+    color: black;
+}
 
 .border {
     background-color: rgb(255, 184, 134);
