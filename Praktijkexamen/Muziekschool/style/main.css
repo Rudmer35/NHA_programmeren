@@ -4,11 +4,11 @@
 }
 @media only screen and (min-width: 768px) {
     [class*="col-"] {
-    float: left;
+   
     padding: 5px;
     }
 
-.col-button{width:4.16%}
+.col-button{width:4.16%; min-width: 50px;}
 .col-1 {width: 8.33%;}
 .col-2 {width: 16.66%;}
 .col-3 {width: 25%;}
@@ -46,6 +46,7 @@ a {
 .container{
     display: flex;
     align-items: stretch;
+    flex-wrap: wrap;
 }
 
 footer {
@@ -60,7 +61,6 @@ footer {
     background-color: rgb(255, 184, 134);
     margin: 0px;
     padding: 20px;
-    height: 100%;
 }
 
 .main{
@@ -69,11 +69,13 @@ footer {
 }
 
 .menu{
+    display: flex;
+    flex-wrap: wrap;
     background-color: rgb(189, 86, 13);
     color: white;
+    padding: 10px;
     margin: 0px;
     text-align: center;
-    
     border-bottom: 5px solid yellow;
 }
 
@@ -81,30 +83,37 @@ footer {
     color: rgb(189, 86, 13);
 }
 
-#sax-img{
+.img{
     padding-top: 30px;
     padding-bottom: 30px;
     display: block;
     margin: auto;
-    width: 300px;
-    height: 200px;
+    max-width: 300px;
+    width: 100%;
+    height: auto;
 }
 
-#trompet-img{
+.imgmain{
     padding-top: 30px;
     padding-bottom: 30px;
     margin-left:30px;
     display:block;
-    width: 300px;
-    height: 200px;
+    max-width: 300px;
+    width: 100%;
+    height: auto;
 }
-#sax2-img{
-    padding-top: 30px;
-    padding-bottom: 30px;
-    margin-left:30px;
-    display:block;
-    width: 300px;
-    height: 200px;
+
+#imghannah{
+    float:right;
+    max-width: 300px;
+    width: 100%;
+    height:auto;
+}
+#imgjesse{
+    float:left;
+    max-width: 300px;
+    width: 100%;
+    height:auto;
 }
 
 .triple{
